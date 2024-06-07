@@ -42,7 +42,7 @@ const Home = () => {
   return (
     <div>
       <Header avatar={avatar} searchBusinesses={searchBusinesses}/>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-20 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4 lg:p-20 gap-3">
         {businesses.map(item => (
           <LocationContainer location={item} key={item.$id}/>
         ))}

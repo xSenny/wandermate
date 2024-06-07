@@ -36,8 +36,8 @@ const Conversation = () => {
     <div className="p-4">
       {data.totalMessages.map((item) => (
         <div key={item.getterId === user.$id ? item.senderName : item.getterName} className="bg-gray-400 w-full flex-col mb-8 py-10 rounded-lg flex justify-center items-center">
-          <p>{`${item.senderId === user.$id ? 'Tu l-ai invitat pe ' + item.getterName + ' la o vizita pe data de: ' + item.date : item.senderName + ' te-a invitat pe tine la o vizita pe data de: ' + item.date}`}</p>
-          <p onClick={() => navigate(`/business/${item.businessId}`)} className="cursor-pointer">Click pentru a vedea detalii despre locatie</p>
+          <p className="text-center">{`${item.senderId === user.$id ? 'Tu l-ai invitat pe ' + item.getterName + ' la o vizita pe data de: ' + item.date : item.senderName + ' te-a invitat pe tine la o vizita pe data de: ' + item.date}`}</p>
+          <p onClick={() => navigate(`/business/${item.businessId}`)} className="cursor-pointer text-center text-white~">Click pentru a vedea detalii despre locatie</p>
         </div>
       ))}
     </div>

@@ -32,7 +32,7 @@ const Profile = () => {
           <div className='w-full h-screen bg-gray-300 flex flex-col'>
           <div className='w-full h-[70%] flex flex-row'>
             <div className='h-full w-[40%] flex justify-center items-center'>
-              <img src={data.avatar} alt="" className='h-[80%] rounded-full ' />
+              <img src={data.avatar} alt="" className='w-[80%] md:w-[40%] rounded-full ' />
             </div>
             <div className='h-full w-[60%] flex justify-center items-center flex-col '>
               <p className='text-2xl font-bold'>Nume: {data.username}</p>
