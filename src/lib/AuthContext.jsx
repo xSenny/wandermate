@@ -38,10 +38,9 @@ export const AuthProvider = ({ children }) => {
 }
 
 const registerUser = async (userInfo) => {
-  setLoading(true)
 
   try{
-      
+      navigate('/onboarding')
       await account.create(ID.unique(), userInfo.email, userInfo.password1, userInfo.name);
 
       await account.createEmailPasswordSession(userInfo.email, userInfo.password1)
@@ -54,7 +53,7 @@ const registerUser = async (userInfo) => {
         avatar: avatarUrl
       })
       setUser(accountDetails)
-      navigate('/onboarding')
+      
   }catch(error){
       throw new Error(error)
   }
