@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { sectoare, types } from "../constants/text";
 import { useEffect, useState } from "react";
 import { Button } from "@material-tailwind/react";
+import { useAuth } from "../lib/AuthContext";
 const Header = ({ avatar, searchBusinesses }) => {
+  const {user} = useAuth();
   const navigate = useNavigate();
   const navigateToProfile = () => {
-    navigate('/profile');
+    navigate(`/profile/${user.$id}`);
   };
 
   const [sector, setSector] = useState('');

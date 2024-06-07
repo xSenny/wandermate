@@ -13,7 +13,8 @@ const data = {
   databaseId: import.meta.env.VITE_DATABASE_ID,
   userCollectionId: 'users',
   businessCollectionId: 'businesses',
-  reviewsCollectionId: 'reviews'
+  reviewsCollectionId: 'reviews',
+  invitesCollectionId: 'invites'
 }
 
 
@@ -49,6 +50,15 @@ export const updateUser = async (userData) => {
     return updatedUser;
 
   }catch(e) {
+    throw new Error(e)
+  }
+}
+
+export const getUserData = async (id) => {
+  try {
+    const user = await databases.getDocument(data.databaseId, data.userCollectionId, id);
+    return user
+  } catch (e) {
     throw new Error(e)
   }
 }
@@ -170,5 +180,70 @@ export const findAMate = async (formData) => {
     return mates.documents;
   } catch (e) {
     throw new Error(e.message)
+  }
+}
+
+export const getMessageChannels = async (userId) => {
+  try {
+    const messages = await databases.listDocuments(data.databaseId, data.invitesCollectionId, [
+      Query.or([Query.equal('senderId', userId), Query.equal('getterId', userId)]),
+      Query.orderDesc("$createdAt")
+    ])
+
+    const messageChannels = messages.documents.filter((message, index, self) => self.findIndex(m => m.getterId === message.getterId && m.senderId === message.senderId) === index);
+
+    return messageChannels
+  } catch (e) {
+    throw new Error(e)
+  }
+}
+
+export const sendInvitation = async (senderId, senderName, getterId, businessId, date) => {
+  try {
+    const getter = await getUserData(getterId);
+    const getterName = getter.username;
+    const invite = await databases.createDocument(data.databaseId, data.invitesCollectionId, ID.unique(), {
+      senderId,
+      getterId,
+      getterName,
+      senderName, 
+      businessId,
+      date
+    })
+
+    return invite;
+  } catch (e) {
+    throw new Error(e)
+  }
+}
+
+export const getMessagesFromChannel = async (userId, secondId) => {
+  try {
+    const messagesSent = await databases.listDocuments(
+      data.databaseId,
+      data.invitesCollectionId,
+      [
+        Query.equal("senderId", userId),
+        Query.equal("getterId", secondId),
+        Query.orderDesc("$createdAt")
+      ]
+    )
+    const messagesReceived = await databases.listDocuments(
+      data.databaseId,
+      data.invitesCollectionId,
+      [
+        Query.equal("getterId", userId),
+        Query.equal("senderId", secondId),
+        Query.orderDesc("$createdAt")
+      ]
+    )
+    const totalMessages = [...messagesSent.documents, ...messagesReceived.documents];
+    totalMessages.sort((a, b) => b.$createdAt - a.$createdAt);
+
+    return {
+      messagesSent: messagesSent.documents, messagesReceived: messagesReceived.documents, totalMessages
+    }
+  } catch (e) {
+    throw new Error(e)
   }
 }

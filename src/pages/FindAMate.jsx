@@ -9,8 +9,8 @@ import HobbiesSelector from "../components/HobbiesSelector";
 import SectorSelector from "../components/SectorSelector";
 import { Button } from "@material-tailwind/react";
 import { useAuth } from "../lib/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { findAMate } from "../lib/appwrite";
+import { useNavigate, useParams } from "react-router-dom";
+import { findAMate, sendInvitation } from "../lib/appwrite";
 import Loader from "../components/Loader";
 
 const FindAMate = () => {
@@ -19,6 +19,7 @@ const FindAMate = () => {
   const [selectedMatches, setSelectedMatches] = useState([])
   const [value, setValue] = useState(dayjs());
   const [isLoading, setIsLoading] = useState(false);
+  const {id} = useParams();
 
 
   const {user} = useAuth();
@@ -74,6 +75,18 @@ const FindAMate = () => {
       console.log('removed')
     }
   }
+
+  const handleInvite = () => {
+    try {
+      setIsLoading(true)
+      selectedMatches.forEach(async match => await sendInvitation(user.$id, user.name, match, id, value.format("DD-MM-YYYY HH:mm")))
+      navigate(`/business/${id}`)
+    } catch(e) {
+      alert(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
   
   
   return (
@@ -110,13 +123,16 @@ const FindAMate = () => {
         {matches.map(item => (
           <div key={item.$id} onClick={() => handleSelectMatch(item)} className={`flex cursor-pointer flex-row items-center w-[full] h-[100px] md:h-[200px] rounded-xl bg-gray-300 ${selectedMatches.includes(item.$id) && 'border-4 border-primary'}`}>
             <div className="h-full w-[30%] md:w-[70%] flex justify-center items-center">
-              <img src={item.avatar} className="w-[20%] rounded-full" />
+              <img src={item.avatar} className="w-[100%] sm-w-[60%] md:w-[50%] lg:w-[30%] xl:w-[20%] rounded-full" />
             </div>
             <div className="h-full w-full flex justify-center items-center px-4">
               <p className="font-secondary text-2xl">{item.username}</p>
             </div>
           </div>
         ))}
+        <div className="my-20 w-full flex justify-center ">
+          <Button onClick={handleInvite} disabled={selectedMatches.length === 0}>Invita-i</Button>
+        </div>
       </>}
     </div>
   )

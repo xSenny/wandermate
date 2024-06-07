@@ -9,6 +9,9 @@ import Welcome from "./pages/Welcome";
 import Home from "./pages/Home";
 import Business from "./pages/Business";
 import FindAMate from "./pages/FindAMate";
+import Profile from "./pages/Profile";
+import Messages from "./pages/Messages";
+import Conversation from "./pages/Conversation";
 
 const App = () => {
   
@@ -31,6 +34,15 @@ const App = () => {
           </Route>
           <Route path="/business/:id/find" element={<ProtectedRoute />}>
             <Route path="" element={<FindAMate />} />
+          </Route>
+          <Route path="/profile/:id" element={<ProtectedRoute />}>
+            <Route path="" element={<Profile />} />
+          </Route>
+          <Route path="/messages" element={<ProtectedRoute />}>
+            <Route path="" element={<Messages />} />
+          </Route>
+          <Route path="/messages/:id" element={<ProtectedRoute />}>
+            <Route path="" element={<Conversation />} />
           </Route>
         </Routes>
       </AuthProvider>
